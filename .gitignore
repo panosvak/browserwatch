@@ -19,6 +19,9 @@ lib-cov
 # Coverage directory used by tools like istanbul
 coverage
 
+# Output of e2e tests
+tests_output
+
 # nyc test coverage
 .nyc_output
 
@@ -79,6 +82,7 @@ dist
 
 # IDE / Editor
 .idea
+.history
 
 # Service worker
 sw.*

@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "chromedriver": "^88.0.0",
-    "nightwatch": "^1.5.1"
+    "nightwatch": "^1.5.1",
+    "fsevents": "2.1.0"
   }
 }

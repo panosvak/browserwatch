@@ -1,4 +1,8 @@
 // External Globals doc: https://nightwatchjs.org/guide/#external-globals
+const { resolve } = require('path')
+const { Nuxt, Builder } = require('nuxt')
+// Used to store the nuxt server instance
+let nuxtInstance = null;
 
 module.exports = {
   // this controls whether to abort the test execution when an assertion failed and skip the rest
@@ -19,7 +23,7 @@ module.exports = {
 
   // controls the timeout value for async hooks. Expects the done() callback to be invoked within this time
   // or an error is thrown
-  asyncHookTimeout: 10000,
+  asyncHookTimeout: 60000,
 
   // controls the timeout value for when running async unit tests. Expects the done() callback to be invoked within this time
   // or an error is thrown
@@ -30,7 +34,7 @@ module.exports = {
   customReporterCallbackTimeout: 20000,
 
   // Automatically retrying failed assertions - You can tell Nightwatch to automatically retry failed assertions until a given timeout is reached, before the test runner gives up and fails the test.
-  retryAssertionTimeout: 1000
+  retryAssertionTimeout: 1000,
 
   // 'default' : {
   //   myGlobal : function() {
@@ -44,21 +48,29 @@ module.exports = {
   //   }
   // },
 
-  //
+  
   // External before hook is ran at the beginning of the tests run, before creating the Selenium session
-  // before(cb) {
-  //   cb();
-  // },
+  before: async function(browser, done) {
+    console.log("Starting Nuxt Server")
+    const rootDir = resolve(__dirname, '')
+    let config = {}
+    try { config = require(resolve(rootDir, 'nuxt.config.js')) } catch (e) {}
+    const nuxt = new Nuxt(config)
+    nuxtInstance = nuxt // We keep a reference to Nuxt so we can close the server at the end of the test
+    await new Builder(nuxt).build()
+    await nuxt.server.listen(this.serverPort, this.serverHost)
+    done()
+  },
+
+  after: async function(browser, done) {
+    console.log('Shutting Down Nuxt');
+    await nuxtInstance.close();
+    done();
+  },
 
   //
   // External beforeEach hook ran before each test suite is started
   // beforeEach(browser, cb) {
-  //   cb();
-  // },
-
-  //
-  // External after hook is ran at the very end of the tests run, after closing the Selenium session
-  // after(cb) {
   //   cb();
   // },
 
