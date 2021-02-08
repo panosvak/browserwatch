@@ -7,7 +7,8 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
-    "test:e2e": "nightwatch"
+    "test:e2e": "nightwatch",
+    "test:browserstack": "node test/e2e/test.js -c nightwatch.browserstack.conf.js"
   },
   "dependencies": {
     "bootstrap": "^4.6.0",
@@ -16,8 +17,10 @@
     "nuxt": "^2.14.12"
   },
   "devDependencies": {
+    "browserstack-local": "^1.4.8",
     "chromedriver": "^88.0.0",
-    "nightwatch": "^1.5.1",
-    "fsevents": "2.1.0"
+    "dotenv": "^8.2.0",
+    "fsevents": "2.1.0",
+    "nightwatch": "^1.5.1"
   }
 }
